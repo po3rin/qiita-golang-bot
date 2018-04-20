@@ -1,7 +1,15 @@
 # Quitter
+Qiita + Twitter Bot
 
-Twitter + Qiita Golang Bot
-Golang + AWS Lambda
+## Dependencies
 
-in development ...
+Golangに関するQiita記事の投稿をつぶやくBotです。
+Golang + AWS Lambda + Qiita API + Twitter API
 
+## Twitter Bot Account Info
+
+|index|value|
+|---|---|
+|ID|@Po3rinB|
+|URL|https://twitter.com/Po3rinB|
+|Qiita Target Tag|"Go"|
