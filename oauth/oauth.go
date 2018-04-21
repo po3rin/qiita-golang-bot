@@ -1,7 +1,7 @@
 package oauth
 
 import (
-	"log"
+	"fmt"
 	"os"
 
 	"github.com/dghubble/go-twitter/twitter"
@@ -9,11 +9,11 @@ import (
 	"github.com/joho/godotenv"
 )
 
-// EnvLoad load twitter Key & Token
+//EnvLoad load twitter Key & Token
 func envLoad() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		fmt.Println("Warning : not load .env file. maybe use Lambda env)")
 	}
 }
 

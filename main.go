@@ -5,12 +5,14 @@ import (
 	"sync"
 	"time"
 
+	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/dghubble/go-twitter/twitter"
 	"github.com/po3rin/qiitter/oauth"
 	"github.com/po3rin/qiitter/qiita"
 )
 
-func main() {
+// Post post twitter
+func post() {
 	var r = qiita.RawGet{
 		Endpoint: "https://qiita.com/api/v2/items",
 		Time:     time.Now().Format("2006-01-02"),
@@ -44,4 +46,8 @@ func main() {
 		}(i)
 	}
 	wg.Wait()
+}
+
+func main() {
+	lambda.Start(post)
 }

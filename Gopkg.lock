@@ -2,6 +2,16 @@
 
 
 [[projects]]
+  name = "github.com/aws/aws-lambda-go"
+  packages = [
+    "lambda",
+    "lambda/messages",
+    "lambdacontext"
+  ]
+  revision = "fafa7e49388b8991caf99308e80655ba91816b72"
+  version = "v1.1.0"
+
+[[projects]]
   name = "github.com/cenkalti/backoff"
   packages = ["."]
   revision = "2ea60e5f094469f9e65adb9cd103795b73ae743e"
@@ -46,6 +56,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "fc14949ff74fc05f8c259b4646b1d746654adbf2fc8e81f8070ab3019638d5e2"
+  inputs-digest = "81649b6072b2d02ccf55669a5aae81e5ad4fe67df91e43cc2de744f1722db9b3"
   solver-name = "gps-cdcl"
   solver-version = 1
