@@ -35,9 +35,11 @@ func post() {
 		go func(i qiita.Item) {
 			defer wg.Done()
 			t, _ := time.Parse("2006-01-02T15:04:05+09:00", i.CreatedAt)
-			created := t.Add(time.Duration(-9) * time.Hour).Unix()
-			if created > boundary {
-				post := i.Title + i.URL
+			created := t.Add(time.Duration(-9) * time.Hour)
+			createdString := t.Format("01/02 15:04")
+			createdUnix := created.Unix()
+			if createdUnix > boundary {
+				post := createdString + "に投稿されました\n" + i.Title + "\n#golang\n" + i.URL
 				_, _, err := client.Statuses.Update(post, nil)
 				if err != nil {
 					fmt.Println("投稿に失敗しました: ", err)
