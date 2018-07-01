@@ -1,4 +1,4 @@
-# Quitter
+# Qiitter
 Qiita + Twitter Bot
 
 ## Dependencies
