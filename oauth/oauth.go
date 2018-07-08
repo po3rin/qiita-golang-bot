@@ -1,30 +1,19 @@
 package oauth
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/dghubble/go-twitter/twitter"
 	"github.com/dghubble/oauth1"
-	"github.com/joho/godotenv"
 )
 
-//EnvLoad load twitter Key & Token
-func envLoad() {
-	err := godotenv.Load()
-	if err != nil {
-		fmt.Println("Warning : not load .env file. maybe use Lambda env)")
-	}
-}
-
 //Client for creating Twitter client
-func Client(ch chan *twitter.Client) {
-	envLoad()
+func Client(ch chan<- *twitter.Client) {
 	var (
-		consumerKey    = os.Getenv("consumerKey")
-		consumerSecret = os.Getenv("consumerSecret")
-		accessToken    = os.Getenv("accessToken")
-		accessSecret   = os.Getenv("accessSecret")
+		consumerKey    = os.Getenv("CONSUMER_KEY")
+		consumerSecret = os.Getenv("CONSUMER_SECRET")
+		accessToken    = os.Getenv("ACCESS_TOKEN")
+		accessSecret   = os.Getenv("ACCESS_SECRET")
 	)
 
 	config := oauth1.NewConfig(consumerKey, consumerSecret)
@@ -33,5 +22,4 @@ func Client(ch chan *twitter.Client) {
 	client := twitter.NewClient(httpClient)
 
 	ch <- client
-	return
 }

@@ -8,37 +8,37 @@ import (
 	"net/url"
 )
 
-// Item for decoding JSON
+// Client - create cURL
+type Client struct {
+	Endpoint string
+	Time     string
+	Tag      string
+}
+
+// Item - Qiita Post
 type Item struct {
 	Title     string `json:"title"`
 	URL       string `json:"url"`
 	CreatedAt string `json:"created_at"`
 }
 
-// RawGet for creating cURL
-type RawGet struct {
-	Endpoint string
-	Time     string
-	Tag      string
-}
-
-func makeQuery(u *url.URL, r *RawGet) (q string) {
+func makeQuery(u *url.URL, c *Client) (q string) {
 	query := u.Query()
-	query.Set("query", "tag:"+r.Tag+" created:>"+r.Time)
+	query.Set("query", "tag:"+c.Tag+" created:>"+c.Time)
 	query.Set("page", "1")
 	query.Set("per_page", "8")
 	u.RawQuery = query.Encode()
 	return u.String()
 }
 
-// GetQiitaItem qiita API client
-func (r *RawGet) GetQiitaItem(ch chan *[]Item) {
-	u, err := url.Parse(r.Endpoint)
+// GetQiitaItems qiita API client
+func (c *Client) GetQiitaItems(ch chan<- *[]Item) {
+	u, err := url.Parse(c.Endpoint)
 	if err != nil {
 		log.Fatal("エンドポイントがパースできませんでした: ", err)
 	}
 
-	q := makeQuery(u, r)
+	q := makeQuery(u, c)
 	req, _ := http.NewRequest("GET", q, nil)
 	req.Header.Set("Content-Type", "application/json")
 
@@ -58,5 +58,4 @@ func (r *RawGet) GetQiitaItem(ch chan *[]Item) {
 		log.Fatal("JSONデコードに失敗しました: ", err)
 	}
 	ch <- &items
-	return
 }

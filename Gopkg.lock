@@ -8,8 +8,8 @@
     "lambda/messages",
     "lambdacontext"
   ]
-  revision = "fafa7e49388b8991caf99308e80655ba91816b72"
-  version = "v1.1.0"
+  revision = "4d30d0ff60440c2d0480a15747c96ee71c3c53d4"
+  version = "v1.2.0"
 
 [[projects]]
   name = "github.com/cenkalti/backoff"
@@ -42,20 +42,20 @@
   revision = "53e6ce116135b80d037921a7fdd5138cf32d7a8a"
 
 [[projects]]
-  name = "github.com/joho/godotenv"
-  packages = ["."]
-  revision = "a79fa1e548e2c689c241d10173efd51e5d689d5b"
-  version = "v1.2.0"
-
-[[projects]]
   branch = "master"
   name = "golang.org/x/net"
   packages = ["context"]
   revision = "d41e8174641f662c5a2d1c7a5f9e828788eb8706"
 
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/sync"
+  packages = ["errgroup"]
+  revision = "1d60e4601c6fd243af51cc01ddf169918a5407ca"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "81649b6072b2d02ccf55669a5aae81e5ad4fe67df91e43cc2de744f1722db9b3"
+  inputs-digest = "d114c6759e850b87185e7c73df452c5e45acef3b1d02f3d39d7a20b19bfa413a"
   solver-name = "gps-cdcl"
   solver-version = 1

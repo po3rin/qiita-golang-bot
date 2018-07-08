@@ -1,53 +1,70 @@
 package main
 
 import (
-	"fmt"
-	"sync"
+	"context"
+	"errors"
+	"os"
 	"time"
 
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/dghubble/go-twitter/twitter"
 	"github.com/po3rin/qiitter/oauth"
 	"github.com/po3rin/qiitter/qiita"
+	"golang.org/x/sync/errgroup"
 )
 
-// Post post twitter
-func post() {
-	var r = qiita.RawGet{
+func post() error {
+	var c = qiita.Client{
 		Endpoint: "https://qiita.com/api/v2/items",
 		Time:     time.Now().Format("2006-01-02"),
-		Tag:      "Go",
+		Tag:      os.Getenv("TARGET_TAG"),
 	}
 
 	ch1 := make(chan *twitter.Client)
 	ch2 := make(chan *[]qiita.Item)
 
 	go oauth.Client(ch1)
-	go r.GetQiitaItem(ch2)
+	go c.GetQiitaItems(ch2)
 
 	client := <-ch1
 	items := <-ch2
 
 	boundary := time.Now().Add(time.Duration(-1) * time.Hour).Unix()
-	var wg sync.WaitGroup
+
+	eg, ctx := errgroup.WithContext(context.Background())
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	for _, i := range *items {
-		wg.Add(1)
-		go func(i qiita.Item) {
-			defer wg.Done()
-			t, _ := time.Parse("2006-01-02T15:04:05+09:00", i.CreatedAt)
-			created := t.Add(time.Duration(-9) * time.Hour)
-			createdString := t.Format("01/02 15:04")
-			createdUnix := created.Unix()
-			if createdUnix > boundary {
-				post := createdString + "に投稿されました\n" + i.Title + "\n#golang\n" + i.URL
-				_, _, err := client.Statuses.Update(post, nil)
+		eg.Go(func() error {
+			select {
+			case <-ctx.Done():
+				return errors.New("Error Post")
+			default:
+				t, err := time.Parse("2006-01-02T15:04:05+09:00", i.CreatedAt)
 				if err != nil {
-					fmt.Println("投稿に失敗しました: ", err)
+					cancel()
 				}
+
+				created := t.Add(time.Duration(-9) * time.Hour)
+				createdString := t.Format("01/02 15:04")
+				createdUnix := created.Unix()
+
+				if createdUnix > boundary {
+					post := createdString + "に投稿されました\n" + i.Title + "\n#golang\n" + i.URL
+					_, _, err := client.Statuses.Update(post, nil)
+					if err != nil {
+						cancel()
+					}
+				}
+				return nil
 			}
-		}(i)
+		})
 	}
-	wg.Wait()
+	if err := eg.Wait(); err != nil {
+		return err
+	}
+	return nil
 }
 
 func main() {
