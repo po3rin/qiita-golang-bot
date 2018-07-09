@@ -13,6 +13,8 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
+var hash = os.Getenv("HASH_TAG")
+
 func post() error {
 	var c = qiita.Client{
 		Endpoint: "https://qiita.com/api/v2/items",
@@ -51,7 +53,7 @@ func post() error {
 				createdUnix := created.Unix()
 
 				if createdUnix > boundary {
-					post := createdString + "に投稿されました\n" + i.Title + "\n#golang\n" + i.URL
+					post := createdString + "に投稿されました\n" + i.Title + "\n" + hash + "\n" + i.URL
 					_, _, err := client.Statuses.Update(post, nil)
 					if err != nil {
 						cancel()
