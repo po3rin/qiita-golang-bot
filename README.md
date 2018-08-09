@@ -1,5 +1,5 @@
 # Qiitter
-Qiita + Twitter Bot
+[![CircleCI](https://circleci.com/gh/po3rin/Qiitter-golang-bot/tree/master.svg?style=svg)](https://circleci.com/gh/po3rin/Qiitter-golang-bot/tree/master)
 
 ## Feature
 
